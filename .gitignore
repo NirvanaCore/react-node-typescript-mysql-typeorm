@@ -23,3 +23,4 @@ _tmp/
 
 # JetBrains IDE
 .idea/
+/node_modules/
