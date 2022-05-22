@@ -1,0 +1,13 @@
+{
+  "type": "mysql",
+  "host":"localhost",
+  "port":"3306",
+  "username":"Soniya",
+  "password":"Passw0rd",
+  "database":"node_admin",
+  "entities":[
+    "src/entity/*.ts"
+  ],
+  "logging":false,
+  "synchronize":true
+}
