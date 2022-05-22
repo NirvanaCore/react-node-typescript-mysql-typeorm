@@ -3,6 +3,7 @@ import {RegisterValidation} from "../validation/registration.validation";
 import {getManager} from "typeorm";
 import bcrypt from 'bcryptjs'
 import {User} from "../entity/user.entity";
+import {sign, verify} from "jsonwebtoken";
 
 export const Register = async(req:Request,res:Response)=>{
     const body = req.body;
@@ -40,8 +41,59 @@ export const Login = async(req:Request,res:Response)=>{
             message: 'invalid credentials'
         })
     }
+    // const payload= {
+    //     id : user.id
+    // }
+    //
+    // const token = sign(payload, "secret");
 
-    const {password , ...data} = user;
+    const token = sign({id : user.id},"secret")
 
-    res.send(data);
+    res.cookie('jwt',token,{
+        httpOnly:true,
+        maxAge:24*60*1000,//1 day
+    })
+
+    //not required to send user info
+    // const {password , ...data} = user;
+    //res.send(data);
+
+    res.send({
+        message: 'login successfully'
+    });
+}
+
+export const AuthenticatedUser = async(req:Request,res:Response) =>{
+    try{
+        const jwt = req.cookies['jwt'];
+
+        const payload:any = verify(jwt,'secret');
+
+        if(!payload){
+            return res.status(401).send({
+                message:'unauthenticated'
+            })
+        }
+
+        const repository = getManager().getRepository(User);
+
+        const user = await repository.findOneBy({id: payload.id});
+
+        const {password, ...data} = user;
+
+        res.send(data);
+        
+    }catch (e) {
+        return res.status(401).send({
+            message:'unauthenticated'
+        })
+    }
+
+}
+
+export const Logout = async(req:Request,res:Response) =>{
+        res.cookie('jwt','',{maxAge:0})
+        res.send({
+            message:'logout successfully'
+        })
 }

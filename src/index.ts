@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import {routes} from "./routes";
 import {createConnection} from "typeorm";
+import cookieParser from "cookie-parser";
 
 
 const PORT  = 8000;
@@ -11,7 +12,9 @@ const PORT  = 8000;
         const app = express();
 
         app.use(express.json());
+        app.use(cookieParser())
         app.use(cors({
+            credentials:true,
             origin: ["http://loaclhost:3000"]
         }))
 
