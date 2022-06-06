@@ -1,4 +1,5 @@
 import { Router } from "express";
+import express from 'express';
 import {
   Register,
   Login,
@@ -30,6 +31,7 @@ import {
   Products,
   UpdateProduct,
 } from "./controller/product.controller";
+import {Upload} from "./controller/image.controller";
 
 export const routes = (router: Router) => {
   //register-login-update
@@ -57,10 +59,14 @@ export const routes = (router: Router) => {
   router.put("/api/roles/:id", AuthMiddleware, UpdateRole);
   router.delete("/api/roles/:id", AuthMiddleware, DeleteRole);
 
-  //users
+  //products
   router.get("/api/products", AuthMiddleware, Products);
   router.post("/api/products", AuthMiddleware, CreateProduct);
   router.get("/api/products/:id", AuthMiddleware, GetProduct);
   router.put("/api/products/:id", AuthMiddleware, UpdateProduct);
   router.delete("/api/products/:id", AuthMiddleware, DeleteProduct);
+
+  //images
+  router.post("/api/upload", AuthMiddleware, Upload);
+  router.use("/api/uploads", express.static('./uploads'));
 };

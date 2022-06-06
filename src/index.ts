@@ -2,13 +2,13 @@ import express from "express";
 require("dotenv").config();
 import cors from "cors";
 import { routes } from "./routes";
-import { createConnection, DataSource } from "typeorm";
+import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
 
 const PORT = 8000;
 
 createConnection()
-  .then(async (connection) => {
+  .then(async () => {
     const app = express();
 
     app.use(express.json());
